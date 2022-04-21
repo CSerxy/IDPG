@@ -1,15 +1,12 @@
-SAVE=/data/home/sinongwang/
-NEWSAVE=/checkpoints/sinongwang/zhuofeng/
 ARCH=roberta_large
+
+SAVE=/PATH/TO/YOUR/CHECKPOINTS/FOLDER/
+NEWSAVE=/PATH/TO/WHERE/YOU/STORE/THE/FINETUNE/CHECKPOINT/FOLDER/
 
 SAVE=/scratch/vgvinodv_root/vgvinodv1/zhuofeng/checkpoints/
 NEWSAVE=/scratch/vgvinodv_root/vgvinodv1/zhuofeng/checkpoints/
 ROBERTA_PATH=$SAVE'roberta_large_checkpoint.pt'
 #ROBERTA_PATH=$SAVE'nli_large_checkpoint.pt'
-#suffixlens="5"
-#insertpositions=$1
-#simply=$2
-#LR="5e-4"
 
 insertpositions="0"
 suffixlen="5"
@@ -21,7 +18,7 @@ seeds="1"
 pdim="16"
 mode="1"
 mkdir -p "main_results"
-OUT_FILE='main_results/IDPG-DNN-p-layerb.txt'$pdim
+OUT_FILE='main_results/IDPG-DNN-p-layerb.txt'$pdim'-'$suffixlen
 
 
 for LR in $LRs; do

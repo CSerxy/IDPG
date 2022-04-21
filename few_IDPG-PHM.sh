@@ -1,5 +1,8 @@
 ARCH=roberta_large
 
+SAVE=/PATH/TO/YOUR/CHECKPOINTS/FOLDER/
+NEWSAVE=/PATH/TO/WHERE/YOU/STORE/THE/FINETUNE/CHECKPOINT/FOLDER/
+
 SAVE=/scratch/vgvinodv_root/vgvinodv1/zhuofeng/checkpoints/
 NEWSAVE=/scratch/vgvinodv_root/vgvinodv1/zhuofeng/checkpoints/
 ROBERTA_PATH=$SAVE'nli_large_checkpoint.pt'

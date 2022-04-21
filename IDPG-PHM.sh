@@ -1,7 +1,8 @@
-SAVE=/data/home/sinongwang/
-NEWSAVE=/checkpoints/sinongwang/zhuofeng/
 ARCH=roberta_large
 
+SAVE=/PATH/TO/YOUR/CHECKPOINTS/FOLDER/
+NEWSAVE=/PATH/TO/WHERE/YOU/STORE/THE/FINETUNE/CHECKPOINT/
+# for me, i set a same path
 SAVE=/scratch/vgvinodv_root/vgvinodv1/zhuofeng/checkpoints/
 NEWSAVE=/scratch/vgvinodv_root/vgvinodv1/zhuofeng/checkpoints/
 ROBERTA_PATH=$SAVE'roberta_large_checkpoint.pt'
@@ -21,7 +22,7 @@ seeds="1"
 pdim="16"
 mode="1"
 mkdir -p "main_results"
-OUT_FILE='main_results/formal_multi-phm-p-ss-layerb'$mode'.txt'$pdim'-'$suffixlen
+OUT_FILE='main_results/IDPG-PHM-p-layerb.txt'$pdim'-'$suffixlen
 
 for LR in $LRs; do
     for insertposition in $insertpositions; do
@@ -39,9 +40,9 @@ for LR in $LRs; do
                  CUDA_VISIBLE_DEVICES=0 python 'scripts/'$TASK'_get_result.py' -i $SAVE_FILE -o $OUT_FILE -n $seed -t $insertposition -l $LR 
             done
             wait
-            SAVE_FILE=$NEWSAVE$TASK$SUFFIX
-            python 'scripts/bagging_'$TASK'.py' -i $SAVE_FILE -o $OUT_FILE
-            echo $TASK 'done'
+            #SAVE_FILE=$NEWSAVE$TASK$SUFFIX
+            #python 'scripts/bagging_'$TASK'.py' -i $SAVE_FILE -o $OUT_FILE
+            #echo $TASK 'done'
         done
     done 
 done

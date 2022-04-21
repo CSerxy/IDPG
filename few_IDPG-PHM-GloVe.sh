@@ -1,5 +1,8 @@
 ARCH=roberta_large
 
+SAVE=/PATH/TO/YOUR/CHECKPOINTS/FOLDER/
+NEWSAVE=/PATH/TO/WHERE/YOU/STORE/THE/FINETUNE/CHECKPOINT/FOLDER/
+
 SAVE=/scratch/vgvinodv_root/vgvinodv1/zhuofeng/checkpoints/
 NEWSAVE=/scratch/vgvinodv_root/vgvinodv1/zhuofeng/checkpoints/
 glove_path=/home/zhuofeng/glove.6B.300d.txt
@@ -22,7 +25,6 @@ for LR in $LRs; do
         OUT_FILE='few_results/glove-r'$K'-'$from'.txt'
 
         TASKs="SST-2 cr mr mpqa subj"
-        TASKs='mr'
         insertpositions="0"
         for insertposition in $insertpositions; do
         	SUFFIX=$K'-glove-r-'$gq'-'$suffixlen'-'$insertposition'-f'$LR'_5-'
@@ -47,7 +49,6 @@ for LR in $LRs; do
         done
     
         TASKs="MRPC RTE QNLI QQP"
-        TASKs=""
         insertpositions="0"
         for insertposition in $insertpositions; do
             SUFFIX=$K'-glove-r-'$gq'-'$suffixlen'-'$insertposition'-f'$LR'_5-'
@@ -69,7 +70,6 @@ for LR in $LRs; do
             done
     
             TASK="STS-B"
-            TASK=""
             for seed in $seeds; do
                 node=0
                 SAVE_FILE=$SAVE$TASK$SUFFIX$seed

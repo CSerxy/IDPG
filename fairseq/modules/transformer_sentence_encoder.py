@@ -370,37 +370,6 @@ class TransformerSentenceEncoder(nn.Module):
                     nn.Linear(self.adapter_bottleneck_dim, self.embedding_dim)) for _ in range(25 - self.adapter_insert_layer)])
             self.middle_adapter_MLP.apply(init_adapter_params)
 
-        if self.add_prefix:
-            #if self.prefix_pos == 'input':
-            #    num_prefix = 1
-            #else:
-            #    num_prefix = num_encoder_layers
-            if self.prefix_prompt == None:
-                print('no prefix prompt')
-                self.prefix_embed = nn.Embedding(self.prefix_len, self.embedding_dim)
-                #if self.prefix_MLP_mode == 'separate':
-                #    self.prefix_embed_MLP = nn.ModuleList(
-                #        [nn.Sequential(
-                #            nn.Linear(self.embedding_dim, self.mid_dim),
-                #            nn.Tanh(),
-                #            nn.Linear(self.mid_dim, self.embedding_dim)) for _ in range(num_prefix)])
-                #else:
-                #    self.prefix_embed_MLP = nn.Sequential(
-                #        nn.Linear(self.embedding_dim, self.mid_dim),
-                #        nn.Tanh(),
-                #        nn.Linear(self.mid_dim, self.embedding_dim))
-                self.prefix_embed.apply(_init_weights)
-                #print(self.prefix_embed((torch.tensor([[0, 1, 2, 3, 4], [0, 1, 2, 3, 4]]))))
-                #self.prefix_embed_MLP.apply(_init_weights)
-            else:
-                #print('initilized from prefix prompt')
-                #tmp = self.embed_tokens(torch.tensor([713, 16, 10, 205, 1569]))
-                #print(self.prefix_prompt)
-                #print(tmp)
-                self.prefix_embed = nn.Embedding.from_pretrained(self.embed_tokens(self.prefix_prompt), freeze=False)
-                #print(self.prefix_embed((torch.tensor([[0, 1, 2, 3, 4], [0, 1, 2, 3, 4]]))))
-                #print('-------------------------')
-                #exit(0)
         if self.add_suffix:
             if self.sentence_generation is not None:
                 self.test = True
@@ -536,13 +505,6 @@ class TransformerSentenceEncoder(nn.Module):
                                 self.middle_generation_dense[i].apply(init_bert_params)
                                 self.middle_generation_out_proj[i].apply(init_bert_params)
 
-                            #self.middle_generation_MLP = nn.ModuleList(
-                            #    [nn.Sequential(
-                            #        nn.Linear(in_features=self.embedding_dim, out_features=self.phm_bottleneck_dim),
-                            #        nn.Tanh(),
-                            #        nn.Linear(self.adapter_bottleneck_dim, self.embedding_dim)) for _ in range(self.middle_prompt_insert_num)])
-                            #    self.middle_prompt_insert_layer
-
                     elif self.middle_prompt_mode == 'layerb':
                         if self.generation_quaternions  is not None:
                             self.middle_generation_out_proj_b = nn.Embedding(self.prompt_insert_mode * self.suffix_len * self.middle_prompt_insert_num, self.embedding_dim)
@@ -551,13 +513,6 @@ class TransformerSentenceEncoder(nn.Module):
                             self.middle_prompt_insert_num += 1
                             self.middle_generation_out_proj_b = nn.Embedding(self.prompt_insert_mode * self.suffix_len * self.middle_prompt_insert_num, self.embedding_dim)
                             self.middle_generation_out_proj_b.apply(_init_weights)
-                    #else:
-                    #    self.middle_adapter_MLP = nn.ModuleList(
-                    #        [nn.Sequential(
-                    #            nn.Linear(self.embedding_dim, self.adapter_bottleneck_dim),
-                    #            nn.GELU(),
-                    #            nn.Linear(self.adapter_bottleneck_dim, self.embedding_dim)) for _ in range(self.middle_prompt_insert_num)])
-                    #    self.middle_adapter_MLP.apply(init_bert_params)
             else:
                 if self.suffix_prompt == None:
                     self.suffix_embed = nn.Embedding(self.suffix_len * self.prompt_insert_mode, self.embedding_dim)
@@ -788,40 +743,16 @@ class TransformerSentenceEncoder(nn.Module):
                         suffix_x = self.generation_activation_fn(tmp_x)
                         suffix_x = self.generation_dropout(suffix_x)
 
-                        #tmp_x = self.generation_out_proj_b.repeat(suffix_x.size()[0], 1).to('cuda:0')
                         tmp_x = self.generation_out_proj_b(torch.arange(self.suffix_len * self.prompt_insert_mode).type_as(tokens)).view(-1).repeat(suffix_x.size()[0], 1).to('cuda:0')
-                        #print('======================')
-                        #print(self.count)
-                        #self.count += 1
-                        #print(tmp_x)
-                        #print('--------------------')
-                        #print('===============')
+
                         for i in range(self.generation_quaternions):
                             if self.lphm is None:
                                 tmp_x += torch.mm(suffix_x, torch.kron(self.generation_shared_w2[i], self.generation_out_proj_w[i]).to('cuda:0'))
                             else:
                                 tmp_x += torch.mm(suffix_x, torch.kron(self.generation_shared_w[i], torch.mm(self.generation_out_proj_s[i], self.generation_out_proj_t[i])).to('cuda:0'))
-                            #print(torch.mm(suffix_x, torch.kron(self.generation_shared_w[i], self.generation_out_proj_w[i]).to('cuda:0')))
-                            #print('------------')
-                        #print(tmp_x)
-                        #exit(0)
-                        #print(suffix_x)
+
                         suffix_x = tmp_x
-                        #print(suffix_x.size())
                         # 16 x 5120
-
-                        #if self.lphm is None:
-                        #    print(self.generation_dense_w[0])
-                        #else:
-                        #    print(self.generation_dense_s[0])
-                        #print(self.generation_dense_b)
-                        #print(tmp_x[0].view(5, -1) - self.generation_out_proj_b(torch.arange(self.suffix_len).type_as(tokens)))
-                        #print('-------------------------')
-
-                        #if self.count == 10:
-                        #    exit(0)
-                        #print(self.generation_dense_w[0][0])
-                        #exit(0)
                     else:
                         suffix_x = self.generation_dense(suffix_x)
                         suffix_x = self.generation_activation_fn(suffix_x)
@@ -838,12 +769,6 @@ class TransformerSentenceEncoder(nn.Module):
 
                     if self.generator_layer_norm != False:
                         suffix_x = self.generator_layer_norm(suffix_x)
-                    #print(suffix_x.size())
-                    #print(suffix_x[0])
-                    #print(suffix_x[0][1])
-                    #
-                    #print(suffix_x[0][1])
-                    #exit(0)
                 elif self.generation_net == 'rnn':
                     features = inner_states[-1].transpose(0, 1)[:, 1:, :]
                     suffix_x, _ = self.generation_lstm(features)
@@ -863,30 +788,12 @@ class TransformerSentenceEncoder(nn.Module):
                     suffix_x = suffix_x.view(tokens.size()[0], -1, self.embedding_dim)
                 if self.generation_net == 'dnn1':
                     suffix_x = self.suffix_embed(torch.arange(5).type_as(tokens))
-                    #suffix_x = self.suffix_embed(torch.arange(5).type_as(tokens)).repeat(16, 1).view(16, -1, 1024)
-                    #suffix_x = self.suffix_embed(torch.arange(5).type_as(tokens)).view(-1).repeat(16, 1).to('cuda:0')
-                    #print(suffix_x)
-                    #print(self.suffix_embed(torch.arange(5).type_as(tokens)))
-                    #print('---------------------')
-                    #exit(0)
             else:
                 if self.reparameterization != 'None':
-                    #print(self.suffix_embed(torch.arange(self.suffix_len).type_as(tokens)))
                     input_embeds = self.suffix_embed(torch.arange(self.suffix_len * self.prompt_insert_mode).type_as(tokens)).unsqueeze(0)
                     self.output_embeds = self.re_mlp_head(self.re_lstm_head(input_embeds)[0]).squeeze()
                 else:
                     suffix_x = self.suffix_embed(torch.arange(self.suffix_len * self.prompt_insert_mode).type_as(tokens)).repeat(tokens.size()[0], 1).view(-1, self.suffix_len * self.prompt_insert_mode, self.embedding_dim)
-
-
-            #print(self.sentence_generation is not None)
-            #print(self.suffix_embed(torch.arange(self.suffix_len).type_as(tokens)))
-            #exit(0)
-            #if self.sentence_generation is None:
-            #    print(self.suffix_embed(torch.arange(self.suffix_len).type_as(tokens)))
-            #else:
-            #    print(self.generation_out_proj_b)
-            #    print(suffix_x[0])
-            #    print(suffix_x[1])
 
             if self.prompt_insert_mode == 1:
                 new_x = []
@@ -896,17 +803,7 @@ class TransformerSentenceEncoder(nn.Module):
                     for stop_idx in range(tokens.size()[1]):
                         if tokens[i][stop_idx] == 2:
                             break
-                    #print(tokens[i][:stop_idx])
-                    #print(tokens[i][stop_idx:])
                     if self.insert_position == 0:
-                        #print(self.suffix_embed(torch.arange(self.suffix_len).type_as(tokens)) if self.sentence_generation is None else suffix_x[i])
-                        #print(self.embed_tokens(torch.LongTensor([10]).to('cuda:0')))
-                        #print(torch.sum(self.embed_tokens(torch.LongTensor([10]).to('cuda:0'))))
-                        #print(torch.var(self.embed_tokens(torch.LongTensor([10]).to('cuda:0'))))
-                        #print(suffix_x[i])
-                        #print(suffix_x[i][1:])
-                        #print(x[i][1:])
-                        #exit(0)
                         if self.reparameterization != 'None':
                             new_x.append(torch.cat((x[i][:1], self.output_embeds, x[i][1:]), 0))
                         else:
@@ -923,10 +820,6 @@ class TransformerSentenceEncoder(nn.Module):
                         for stop_idx in range(tokens.size()[1] - 1, tmp, -1):
                             if tokens[i][stop_idx] == 2:
                                 break
-                        #print(self.suffix_embed(torch.arange(self.suffix_len).type_as(tokens)))
-                        #print(suffix_x)
-                        #print(stop_idx)
-                        #print('-----------------------')
                         new_x.append(torch.cat((x[i][:stop_idx], self.suffix_embed(torch.arange(self.suffix_len).type_as(tokens)) if self.sentence_generation is None else suffix_x[i], x[i][stop_idx:]), 0))
                     else:
                         tmp = stop_idx
@@ -947,8 +840,6 @@ class TransformerSentenceEncoder(nn.Module):
                 x = torch.stack(new_x)
                 if padding_mask is not None:
                     padding_mask = torch.stack(new_padding_mask)
-                    #print(padding_mask.size())
-                    #exit(0)
         else:
             suffix_x = None
 
@@ -957,53 +848,6 @@ class TransformerSentenceEncoder(nn.Module):
         else:
             self.embed_scale = 1.0
 
-        if self.add_prefix:
-            exit(0)
-            #if self.prefix_prompt != None:
-            #    self.prefix_embed = nn.Embedding.from_pretrained(self.embed_tokens(self.prefix_prompt.to('cuda:0')), freeze=False)
-            #    self.prefix_prompt = None
-            #    #print("==========================")
-            #    #if self.args.freeze_encoder:
-            #    def freeze_module_params(m):
-            #        if m is not None:
-            #            for p in m.parameters():
-            #                p.requires_grad = False
-        
-            #    freeze_module_params(self.embed_tokens)
-            #    freeze_module_params(self.segment_embeddings)
-            #    freeze_module_params(self.embed_positions)
-            #    freeze_module_params(self.emb_layer_norm)
-        
-            #    for layer in range(len(self.layers)):
-            #        freeze_module_params(self.layers[layer])
-
-            #    #for name, param in model.encoder.named_parameters():
-            #    #    #print(name)
-            #    #    if name == 'sentence_encoder.prefix_embed.weight':
-            #    #        print(param)
-            #    #        continue
-            #    #    param.requires_grad = False
-            new_x = []
-            new_padding_mask = []
-            for i in range(tokens.size()[0]):
-                new_x.append(torch.cat((x[i][:1], self.prefix_embed(torch.arange(self.prefix_len).type_as(tokens)), self.embed_tokens(torch.LongTensor([2]).to('cuda:0')), self.embed_tokens(torch.LongTensor([2]).to('cuda:0')), x[i][1:]), 0))
-
-                if padding_mask is not None:
-                    zeros = torch.zeros(self.prefix_len + 2).type_as(padding_mask)
-                    new_padding_mask.append(torch.cat((padding_mask[i][:1], zeros, padding_mask[i][1:]), dim=-1))
-            x = torch.stack(new_x)
-            if padding_mask is not None:
-                padding_mask = torch.stack(new_padding_mask)
-            #prefix_ids = torch.arange(self.prefix_len).view(1, -1).repeat(x.shape[0], 1).type_as(tokens)
-            #prefix_embed = self.prefix_embed(prefix_ids) * self.embed_scale
-            #x = torch.cat([prefix_embed, x], dim=1)
-            #print(self.embed_tokens(torch.tensor([713, 16, 10, 205, 1569], device='cuda:0')))
-            #print(x[0][:5])
-        #exit(0)
-        #if self.add_suffix:
-        #    suffix_ids = torch.arange(self.suffix_len).view(1, -1).repeat(x.shape[0], 1).type_as(tokens)
-        #    suffix_embed = self.suffix_embed(suffix_ids) * self.embed_scale
-        #    x = torch.cat([x, suffix_embed], dim=1)
         exceed_len = False
         if x.size()[1] > 512:
             print(x.size())
@@ -1018,9 +862,6 @@ class TransformerSentenceEncoder(nn.Module):
 
 
         if self.embed_positions is not None:
-            if self.add_prefix:
-                zeros = torch.zeros(x.shape[0], self.prefix_len + 2).type_as(tokens)
-                tokens = torch.cat([zeros, tokens], dim=-1)
             if self.add_suffix and self.prompt_insert_mode == 1:
                 if self.insert_position != 4:
                     zeros = torch.zeros(x.shape[0], self.suffix_len).type_as(tokens)
@@ -1031,7 +872,6 @@ class TransformerSentenceEncoder(nn.Module):
                     tokens = tokens[:, :512]
 
             x += self.embed_positions(tokens, positions=positions)
-        #print(x[:, 0, :])
 
         if self.segment_embeddings is not None and segment_labels is not None:
             # TODO: if segment_labels is not None needs to shift
@@ -1041,39 +881,13 @@ class TransformerSentenceEncoder(nn.Module):
             x = self.quant_noise(x)
 
         if self.emb_layer_norm is not None:
-            #print(x[0][:5])
-            #print(x[1][:5])
-            #print(x.size())
-            #exit(0)
             x = self.emb_layer_norm(x)
-            #print(x[0][:5])
-        #print(x[:, 0, :])
 
         x = F.dropout(x, p=self.dropout, training=self.training)
 
         # account for padding while computing the representation
         if padding_mask is not None:
             x *= 1 - padding_mask.unsqueeze(-1).type_as(x)
-        #print(x[:, 0, :])
-
-        #batch_size = x.shape[0]
-        #max_len = x.shape[1]
-        #
-        #if self.add_prefix:
-        #    # B x prefix_len x C
-        #    prefix_embed = self.prefix_embed_MLP(
-        #        self.prefix_embed[0](prefix_ids) * self.embed_scale)
-        #    if padding_mask is not None:
-        #        for _ in range(batch_size):
-        #            tmp_idx = max_len
-        #            for j in range(x.shape[1]):
-        #                if padding_mask[_][j]:
-        #                    tmp_idx = j
-        #                    break
-        #            x[_] = torch.cat(x[_, :tmp_idx], prefix_embed, x[_, tmp_idx:], 1)
-        #    else:
-        #
-        #    x = torch.cat([prefix_embed, x], dim=1)
 
         # B x T x C -> T x B x C
 
@@ -1085,50 +899,7 @@ class TransformerSentenceEncoder(nn.Module):
         if not last_state_only:
             inner_states.append(x)
 
-
-        #print(x.size())
-        #print('----------------')
-        #if self.middle_prompt_insert_layer < 25:
-        #    print(self.middle_prompt(torch.arange(0, 1).type_as(tokens)))
-
         for idx, layer in enumerate(self.layers):
-            #if self.add_prefix and (idx == 0 or self.prefix_pos == 'layers'):
-            #    if self.prefix_MLP_mode == 'separate':
-            #        #print(idx, self.prefix_embed[idx](prefix_ids).shape)
-            #        prefix_embed = self.prefix_embed_MLP[idx](
-            #            self.prefix_embed[idx](prefix_ids) * self.embed_scale)
-            #        #print(prefix_embed.shape)
-            #        #print('--------------')
-            #    elif self.prefix_MLP_mode == 'shared':
-            #        prefix_embed = self.prefix_embed_MLP(
-            #            self.prefix_embed[idx](prefix_ids) * self.embed_scale)
-            #    else:
-            #        prefix_embed = self.prefix_embed[idx](prefix_ids) * self.embed_scale
-            #    prefix_embed = prefix_embed.transpose(0, 1)
-            #    if idx == 0:
-            #        x = torch.cat([prefix_embed, x], dim=0)
-            #    else:
-            #        x = torch.cat([prefix_embed, x[self.prefix_len:]], dim=0)
-
-            #if self.middle_prompt_insert_layer < 25:
-            #    print(self.middle_prompt(torch.arange(0, 5).type_as(tokens)))
-            #    #print(idx, idx * self.suffix_len, (idx + 1) * self.suffix_len)
-            #    #print(self.middle_prompt(torch.arange(idx * self.suffix_len, (idx + 1) * self.suffix_len).type_as(tokens)))
-            #    print('---------')
-            #if idx + 1 >= self.middle_prompt_insert_layer and idx < 23 and self.sentence_generation is not None:
-            #    #x: T x 16 x 1024
-            #    if self.middle_previous:
-            #        suffix_x = x[0, :, :].clone()
-            #        print("==============")
-            #        print(suffix_x)
-            #        print(suffix_x.size())
-            #        #print('------------')
-            #        #print(suffix_x[1])
-            #    else:
-            #        suffix_x = suffix_x0.clone()
-            #        #print('============')
-            #        #print(suffix_x)
-            #    # 16 x 1024
             if self.prompt_insert_mode == 1:
                 suffix_x = None
             if self.adapter_arch == 'compacter':
@@ -1167,10 +938,6 @@ class TransformerSentenceEncoder(nn.Module):
                     adapter_MLP2 = None
 
                 x, _ = layer(x, self_attn_padding_mask=padding_mask, suffix_x=suffix_x, adapter_MLP=adapter_MLP, adapter_MLP2=adapter_MLP2, adapter_arch=self.adapter_arch)
-                #if self.prompt_insert_mode == 2:
-                #    x, _ = layer(x, self_attn_padding_mask=padding_mask, suffix_x=suffix_x, adapter_MLP=adapter_MLP, adapter_MLP2=adapter_MLP2, adapter_arch=self.adapter_arch)
-                #else:
-                #    x, _ = layer(x, self_attn_padding_mask=padding_mask, adapter_MLP=adapter_MLP, adapter_MLP2=adapter_MLP2, adapter_arch=self.adapter_arch)
 
             if idx + 1 >= self.middle_prompt_insert_layer and idx < 23:
                 # middle_prompt_insert_layer is between [1, 23]
@@ -1254,7 +1021,7 @@ class TransformerSentenceEncoder(nn.Module):
                 else:
                     if self.middle_prompt_mode == 'none':
                         layer_prompt = self.middle_prompt(torch.arange(idx * self.suffix_len * self.prompt_insert_mode, (idx + 1) * self.suffix_len * self.prompt_insert_mode).type_as(tokens)).repeat(tokens.shape[0], 1).view(-1, self.suffix_len * self.prompt_insert_mode, self.embedding_dim).transpose(0, 1)
-                        #layer_prompt = self.multi_layer_norm(self.middle_prompt(torch.arange(idx * self.suffix_len, (idx + 1) * self.suffix_len).type_as(tokens)).repeat(tokens.shape[0], 1).view(-1, self.suffix_len, self.embedding_dim).transpose(0, 1))
+
                         if self.prompt_insert_mode != 2:
                             for i in range(layer_prompt.size()[1]):
                                 x[self.stop_idxs[i]:self.stop_idxs[i]+self.suffix_len, i] += layer_prompt[:,i]
