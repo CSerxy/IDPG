@@ -1,0 +1,56 @@
+cr: 0-0-1-5e-3| Accuracy: 0.9275
+cr: 0-0-2-5e-3| Accuracy: 0.9325
+cr: 0-0-3-5e-3| Accuracy: 0.9265
+cr: 0-0-4-5e-3| Accuracy: 0.9305
+cr: 0-0-5-5e-3| Accuracy: 0.935
+cr bagging| Accuracy: 0.937
+avg | 93.0(0.3)
+rte 0-0-1-5e-3| Accuracy: 0.8736462093862816
+rte 0-0-2-5e-3| Accuracy: 0.8736462093862816
+rte 0-0-3-5e-3| Accuracy: 0.8736462093862816
+rte 0-0-4-5e-3| Accuracy: 0.5884476534296029
+rte 0-0-5-5e-3| Accuracy: 0.8772563176895307
+rte bagging| Accuracy: 0.8916967509025271
+avg | 81.7(11.4)
+cr: 0-0-1-1e-3| Accuracy: 0.933
+cr: 0-0-2-1e-3| Accuracy: 0.9325
+cr: 0-0-3-1e-3| Accuracy: 0.9355
+cr: 0-0-4-1e-3| Accuracy: 0.9305
+cr: 0-0-5-1e-3| Accuracy: 0.9365
+cr bagging| Accuracy: 0.94
+avg | 93.4(0.2)
+rte 0-0-1-1e-3| Accuracy: 0.8158844765342961
+rte 0-0-2-1e-3| Accuracy: 0.8267148014440433
+rte 0-0-3-1e-3| Accuracy: 0.8411552346570397
+rte 0-0-4-1e-3| Accuracy: 0.7978339350180506
+rte 0-0-5-1e-3| Accuracy: 0.8086642599277978
+rte bagging| Accuracy: 0.8339350180505415
+avg | 81.8(1.5)
+cr: 0-0-1-5e-4| Accuracy: 0.9305
+cr: 0-0-2-5e-4| Accuracy: 0.9335
+cr: 0-0-3-5e-4| Accuracy: 0.9295
+cr: 0-0-4-5e-4| Accuracy: 0.9255
+cr: 0-0-5-5e-4| Accuracy: 0.92
+cr bagging| Accuracy: 0.9325
+avg | 92.8(0.5)
+rte 0-0-1-5e-4| Accuracy: 0.7870036101083032
+rte 0-0-2-5e-4| Accuracy: 0.7906137184115524
+rte 0-0-3-5e-4| Accuracy: 0.7689530685920578
+rte 0-0-4-5e-4| Accuracy: 0.7581227436823105
+rte 0-0-5-5e-4| Accuracy: 0.779783393501805
+rte bagging| Accuracy: 0.776173285198556
+avg | 77.7(1.2)
+cr: 0-0-1-1e-4| Accuracy: 0.913
+cr: 0-0-2-1e-4| Accuracy: 0.9135
+cr: 0-0-3-1e-4| Accuracy: 0.9165
+cr: 0-0-4-1e-4| Accuracy: 0.919
+cr: 0-0-5-1e-4| Accuracy: 0.912
+cr bagging| Accuracy: 0.916
+avg | 91.5(0.3)
+rte 0-0-1-1e-4| Accuracy: 0.6967509025270758
+rte 0-0-2-1e-4| Accuracy: 0.703971119133574
+rte 0-0-3-1e-4| Accuracy: 0.6895306859205776
+rte 0-0-4-1e-4| Accuracy: 0.7111913357400722
+rte 0-0-5-1e-4| Accuracy: 0.7003610108303249
+rte bagging| Accuracy: 0.7075812274368231
+avg | 70.0(0.7)

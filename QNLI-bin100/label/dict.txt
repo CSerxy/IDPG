@@ -1,0 +1,4 @@
+entailment 55
+not_entailment 44
+madeupword0000 0
+madeupword0001 0

@@ -1,0 +1,20 @@
+Metadata-Version: 2.1
+Name: fairseq
+Version: 0.9.0
+Summary: Facebook AI Research Sequence-to-Sequence Toolkit
+Home-page: https://github.com/pytorch/fairseq
+License: UNKNOWN
+Platform: UNKNOWN
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# IDPG
+IDPG: An Instance-Dependent Prompt Generation Method
+
+This repository contains the code and pre-trained models for our paper IDPG: An Instance-Dependent Prompt Generation Method
+
+
