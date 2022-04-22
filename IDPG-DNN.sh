@@ -11,9 +11,9 @@ ROBERTA_PATH=$SAVE'roberta_large_checkpoint.pt'
 insertpositions="0"
 suffixlen="5"
 LRs="5e-3 1e-3 5e-4 1e-4"
-LRs="5e-4"
+#LRs="5e-4"
 seeds="1 2 3 4 5"
-seeds="1"
+#seeds="1"
 
 pdim="16"
 mode="1"

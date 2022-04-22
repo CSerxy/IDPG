@@ -31,12 +31,12 @@ for LR in $LRs; do
             #SAVE=$checkpoint_path'efl_roberta-d_phm-'$gq'-'$suffixlen'-'$from'/'
     
             for TASK in $TASKs; do
-                #for seed in $seeds; do
-                #    node=0
-                #    SAVE_FILE=$SAVE$TASK$SUFFIX$seed
-                #    bash scripts/few-glove.sh $ROBERTA_PATH $SAVE_FILE $seed $ARCH $node $insertposition $LR $K $TASK $glove_path 
-                #done
-                #wait
+                for seed in $seeds; do
+                    node=0
+                    SAVE_FILE=$SAVE$TASK$SUFFIX$seed
+                    bash scripts/few-glove.sh $ROBERTA_PATH $SAVE_FILE $seed $ARCH $node $insertposition $LR $K $TASK $glove_path 
+                done
+                wait
                 for seed in $seeds; do
                     SAVE_FILE=$SAVE$TASK$SUFFIX$seed'/'
                     CUDA_VISIBLE_DEVICES=0 python 'scripts/'$TASK'_get_result.py' -i $SAVE_FILE -o $OUT_FILE -n $seed -f $from -t $insertposition -k $K -l $LR

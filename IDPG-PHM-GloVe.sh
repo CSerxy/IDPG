@@ -13,10 +13,7 @@ ROBERTA_PATH=$SAVE'roberta_large_checkpoint.pt'
 insertpositions="0"
 suffixlen="5"
 LRs="5e-3 1e-3 5e-4 1e-4"
-LRs="5e-4"
-LRs="5e-3 1e-3 1e-4"
 seeds="1 2 3 4 5"
-seeds="1"
 
 pdim="16"
 mode="1"
@@ -28,7 +25,6 @@ for LR in $LRs; do
     for insertposition in $insertpositions; do
         SUFFIX='-multi-phm-glove-layerb-'$mode'-'$pdim'-'$suffixlen'-'$insertposition'-f'$LR'_5-'
         TASKs='mpqa subj cr mr sst-2 qnli rte mrpc sts-b qqp'
-        TASKs='rte'
         for TASK in $TASKs; do
             for seed in $seeds; do
                 node=0

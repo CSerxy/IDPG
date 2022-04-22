@@ -28,6 +28,7 @@ for LR in $LRs; do
     for insertposition in $insertpositions; do
         SUFFIX='-multi-phm-p-layerb-'$mode'-'$pdim'-'$suffixlen'-'$insertposition'-f'$LR'_5-'
         TASKs='mpqa subj cr mr sst-2 qnli rte mrpc sts-b qqp'
+        TASKs='rte'
         for TASK in $TASKs; do
             for seed in $seeds; do
                 node=0
