@@ -60,6 +60,8 @@ We explain the main arguments in following:
 * `seeds`: the multiple random seeds.
 * `pdim`: the hidden layer size in phm bottleneck  
 
+The result will be stored at the path `OUT_FILE`.
+
 ```
 ARCH=roberta_large
 
