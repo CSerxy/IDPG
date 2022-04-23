@@ -14,7 +14,7 @@ This repository contains the code for our paper [IDPG: An Instance-Dependent Pro
 * [PyTorch](http://pytorch.org/) version >= 1.4.0
 * Python version >= 3.6
 * For training new models, you'll also need an NVIDIA GPU and [NCCL](https://github.com/NVIDIA/nccl)
-* **To install fairseq** and develop locally:
+* **To install IDPG** and develop locally:
 
 ```bash
 conda create -n IDPG python=3.6
