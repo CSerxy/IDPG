@@ -62,6 +62,7 @@ We explain the main arguments in following:
 
 The result will be stored at the path `OUT_FILE`.
 
+Below is an example of showing you how to train and evaluate IDPG-PHM-GloVE:
 ```
 ARCH=roberta_large
 
