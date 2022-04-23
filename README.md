@@ -40,3 +40,6 @@ Model | Description | # params | Download
 ---|---|---|---
 `roberta.large` | RoBERTa using the BERT-large architecture | 355M | [roberta.large.tar.gz](https://dl.fbaipublicfiles.com/fairseq/models/roberta.large.tar.gz)
 `roberta.large.mnli` | `roberta.large` finetuned on [MNLI](http://www.nyu.edu/projects/bowman/multinli) | 355M | [roberta.large.mnli.tar.gz](https://dl.fbaipublicfiles.com/fairseq/models/roberta.large.mnli.tar.gz)
+
+### GloVe 
+We also provided a GloVe-based prompt generation method, with much less FLOPS but maintain a similar performance. Before running this model, you need to download [GloVe embeddings](https://nlp.stanford.edu/data/glove.6B.zip) first. 
