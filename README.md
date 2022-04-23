@@ -17,8 +17,8 @@ This repository contains the code and pre-trained models for our paper [IDPG: An
 * **To install fairseq** and develop locally:
 
 ```bash
-conda create -n myenv python=3.6
-conda activate myenv
+conda create -n IDPG python=3.6
+conda activate IDPG
 git clone https://github.com/CSerxy/IDPG.git
 cd IDPG 
 pip install --editable ./
@@ -27,5 +27,8 @@ pip install pytorch-metric-learning==0.9.90.dev0
 
 # on MacOS:
 # CFLAGS="-stdlib=libc++" pip install --editable ./
-```
 
+# on A100:
+# conda install pytorch torchvision torchaudio cudatoolkit=11.1 -c pytorch -c nvidia
+# pip3 install torch==1.8.1+cu111 torchvision==0.9.1+cu111 torchaudio==0.8.1 -f https://download.pytorch.org/whl/torch_stable.html
+```
