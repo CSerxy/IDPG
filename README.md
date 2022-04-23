@@ -1,7 +1,7 @@
 # IDPG
 IDPG: An Instance-Dependent Prompt Generation Method
 
-This repository contains the code and pre-trained models for our paper IDPG: An Instance-Dependent Prompt Generation Method
+This repository contains the code and pre-trained models for our paper [IDPG: An Instance-Dependent Prompt Generation Method](https://arxiv.org/pdf/2204.04497.pdf)
 
 ## Requirements and Installation
 
