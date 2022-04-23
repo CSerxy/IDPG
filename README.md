@@ -32,3 +32,11 @@ pip install pytorch-metric-learning==0.9.90.dev0
 # conda install pytorch torchvision torchaudio cudatoolkit=11.1 -c pytorch -c nvidia
 # pip3 install torch==1.8.1+cu111 torchvision==0.9.1+cu111 torchaudio==0.8.1 -f https://download.pytorch.org/whl/torch_stable.html
 ```
+
+### Pre-trained models
+We mainly trained our model starting from below two checkpoints. We used roberta.large for main results, roberta.large.mnli for few-shot results. 
+
+Model | Description | # params | Download
+---|---|---|---
+`roberta.large` | RoBERTa using the BERT-large architecture | 355M | [roberta.large.tar.gz](https://dl.fbaipublicfiles.com/fairseq/models/roberta.large.tar.gz)
+`roberta.large.mnli` | `roberta.large` finetuned on [MNLI](http://www.nyu.edu/projects/bowman/multinli) | 355M | [roberta.large.mnli.tar.gz](https://dl.fbaipublicfiles.com/fairseq/models/roberta.large.mnli.tar.gz)
