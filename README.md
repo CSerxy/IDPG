@@ -109,3 +109,16 @@ for LR in $LRs; do
     done 
 done
 ```
+## Training Environments
+The codebase is based on [fairseq](https://github.com/pytorch/fairseq). We tested our codes in an Nvidia A100 environment. We notice that the model's performance is sensitive to one's server environment and package version. You may find a slight performance difference if you do not have the exact same environment. We highly recommend you run hyper-parameter tuning in your own environment based on our sample scripts. 
+
+## Citation
+Please cite our paper if you use SimCSE in your work:
+```bibtex
+@article{wu2022idpg,
+  title={IDPG: An Instance-Dependent Prompt Generation Method},
+  author={Wu, Zhuofeng and Wang, Sinong and Gu, Jiatao and Hou, Rui and Dong, Yuxiao and Vydiswaran, VG and Ma, Hao},
+  journal={arXiv preprint arXiv:2204.04497},
+  year={2022}
+}
+```
